@@ -1,0 +1,151 @@
+_parentDatas:
+- twoPlayer
+- turnBased
+- tiled
+
+Game:
+  name: Magomachy
+  description: Wizards fight to the death.
+  attributes:
+    wizards:
+      description: List of wizard choices.
+      type: string[]
+    
+Player:
+  attributes:
+    wizard:
+      description: The specific wizard owned by the player.
+      type: Wizard?
+  functions:
+    chooseWizard:
+      description: This is called when you need to pick your wizard class.
+      arguments:
+      - type: string
+        name: wizardClass
+        description: The class of wizard the player wants.
+      returns:
+        type: boolean
+        description: True if class successfully chosen, false otherwise.
+        invalidValue: false
+    
+
+Tile:
+  attributes:
+    wizard:
+      description: The Wizard on this Tile if present, otherwise null.
+      type: Wizard?
+    object:
+      description: The Item on this Tile if present, otherwise null.
+      type: Item?
+    type:
+      description: The type of Tile this is (i.e Grass, Wall).
+      type: const string = "floor" | "wall"
+
+Item:
+  description: Objects that help the players.
+  attributes:
+    tile:
+      description: The Tile this Item is on.
+      type: Tile!
+    form:
+      description: The type of Item this is.
+      type: string!
+    lifetime:
+      description: How many turns this item has existed for.
+      type: int!
+    
+Wizard:
+  description: The wizard default.
+  attributes:
+    owner:
+      description: The Player that owns and can control this Unit, or null if the Unit is neutral.
+      type: Player?
+    specialty:
+      description: Specific type of Wizard.
+      type: const string = "aggressive" | "defensive" | "sustaining" | "strategic"
+    attack:
+      description: The attack value of the player.
+      type: int
+    defense:
+      description: The defense value of the player.
+      type: int
+    aether:
+      description: The amount of spell resources this Player has.
+      type: int
+    health:
+      description: The amount of health this player has.
+      type: int
+    speed:
+      description: The speed of the player.
+      type: int
+    effects:
+      description: The names of active effects on the Wizard.
+      type: string[]
+    effectTimes:
+      description: The turns remaining on each active effects on Wizard.
+      type: int[]
+    direction:
+      description: The direction this Wizard is facing.
+      type: int
+    movementLeft:
+      description: How much movement the wizard has left.
+      type: int
+    hasCast:
+      description: Whether or not this Wizard has cast a spell this turn.
+      type: boolean
+    tile:
+      type: Tile?
+      description: The Tile that this Wizard is on.
+    lastSpell:
+      type: string?
+      description: The spell this wizard just casted. Undefined if no spell was cast.
+    lastTargetTile:
+      type: Tile?
+      description: The tile this wizard just cast to. Undefined if no tile was targeted.
+  functions:
+    cast:
+      description: Casts a spell on a Tile in range.
+      arguments:
+      - name: spellName
+        type: string!
+        description: The name of the spell to cast.
+      - name: tile
+        type: Tile!
+        description: The Tile to aim the spell toward.
+      returns:
+        type: boolean
+        description: True if successfully cast, false otherwise.
+        invalidValue: false
+    move:
+      description: Moves this Wizard from its current Tile to another empty Tile.
+      arguments:
+      - name: tile
+        type: Tile!
+        description: The Tile this Wizard should move to.
+      returns:
+        type: boolean
+        description: True if it moved, false otherwise.
+        invalidValue: false
+AI:
+  functions:
+    # this argument exists mostly as a template for creer templates for an AI function with arguments, and that returns nothing
+    Move:
+      description: This is called whenever your wizard makes a move.
+      arguments:
+      - type: Wizard!
+        name: wizard
+        description: Wizard moves.
+      returns:
+        type: int
+        description: Eight cardinal directions.
+        default: -1
+    Action:
+      description: This is called whenever your wizard selects an action.
+      arguments:
+      - type: Wizard!
+        name: wizard
+        description: Wizard performs action.
+      returns:
+        type: int
+        description: Three of the choices a Wizard can make as an action.
+        default: -1
