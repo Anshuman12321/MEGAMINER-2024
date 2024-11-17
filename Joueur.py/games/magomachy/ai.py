@@ -88,12 +88,52 @@ class AI(BaseAI):
         Returns:
             bool: Represents if you want to end your turn. True means end your turn, False means to keep your turn going and re-call this function.
         """
-        self.player.wizard.move(self.player.wizard.tile.tile_west)
-        self.player.wizard.cast("Punch", self.player.wizard.tile.tile_west)
+        #self.player.wizard.move(self.player.wizard.tile.tile_west)
+        #self.player.wizard.cast("Punch", self.player.wizard.tile.tile_west)
         # <<-- Creer-Merge: runTurn -->> - Code you add between this comment and the end comment will be preserved between Creer re-runs.
         # Put your game logic here for runTurn
-        return True
+        #return True
         # <<-- /Creer-Merge: runTurn -->>
+
+        if self.game.current_turn() == 0 or self.game.current_turn() == 1:
+            wizard = 'sustainable'
+            self.player.choose_wizard(wizard)
+            return True
+        else:
+        # Get current position of the wizard
+        x, y = self.player.wizard.tile.x, self.player.wizard.tile.y
+    
+        # Determine the movement direction based on the starting position
+        if (x, y) == (0, 7):  # Bottom-left corner: Counterclockwise
+            if x == 0 and y > 0:  # Moving left along bottom row
+                next_tile = self.game.get_tile_at(x, y - 1)
+            elif y == 0 and x < 7:  # Moving up along left column
+                next_tile = self.game.get_tile_at(x + 1, y)
+            elif x == 7 and y < 7:  # Moving right along top row
+                next_tile = self.game.get_tile_at(x, y + 1)
+            elif y == 7 and x > 0:  # Moving down along right column
+                next_tile = self.game.get_tile_at(x - 1, y)
+            else:
+                next_tile = None  # Fallback in case of unexpected state
+        elif (x, y) == (7, 0):  # Top-right corner: Clockwise
+            if y == 0 and x > 0:  # Moving left along top row
+                next_tile = self.game.get_tile_at(x - 1, y)
+            elif x == 0 and y < 7:  # Moving down along left column
+                next_tile = self.game.get_tile_at(x, y + 1)
+            elif y == 7 and x < 7:  # Moving right along bottom row
+                next_tile = self.game.get_tile_at(x + 1, y)
+            elif x == 7 and y > 0:  # Moving up along right column
+                next_tile = self.game.get_tile_at(x, y - 1)
+            else:
+                next_tile = None  # Fallback in case of unexpected state
+        else:
+            next_tile = None  # Fallback in case wizard is not at starting corners
+    
+        # Check if the move is valid before proceeding
+        if next_tile and self.game.is_valid_move(self.player.wizard, next_tile):
+            self.player.wizard.move(next_tile)
+    
+        return True
 
     def find_path(self, start: 'games.magomachy.tile.Tile', goal: 'games.magomachy.tile.Tile') -> List['games.magomachy.tile.Tile']:
         """A very basic path finding algorithm (Breadth First Search) that when given a starting Tile, will return a valid path to the goal Tile.
