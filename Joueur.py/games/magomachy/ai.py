@@ -1,7 +1,6 @@
-# This is where you build your AI for the Magomachy game.
-
 from typing import List
 from joueur.base_ai import BaseAI
+import random
 
 # <<-- Creer-Merge: imports -->> - Code you add between this comment and the end comment will be preserved between Creer re-runs.
 # you can add additional import(s) here
@@ -37,6 +36,7 @@ class AI(BaseAI):
         """
         # <<-- Creer-Merge: start -->> - Code you add between this comment and the end comment will be preserved between Creer re-runs.
         # replace with your start logic
+        self.player.choose_wizard("map")
         # <<-- /Creer-Merge: start -->>
 
     def game_updated(self) -> None:
@@ -82,18 +82,210 @@ class AI(BaseAI):
         # Put your game logic here for Move
         return -1
         # <<-- /Creer-Merge: Move -->>
-    def run_turn(self) -> bool:
-        """This is called every time it is this AI.player's turn.
 
-        Returns:
-            bool: Represents if you want to end your turn. True means end your turn, False means to keep your turn going and re-call this function.
-        """
-        self.player.wizard.move(self.player.wizard.tile.tile_west)
-        self.player.wizard.cast("Punch", self.player.wizard.tile.tile_west)
+
+
+
+
+
+    def run_turn(self) -> bool:
+    
+        print("Your turn! Here's the map:")
+
+        if not self.player.wizard:
+            print("Choosing a wizard...")
+            self.player.choose_wizard("aggressive")
+
+        # Access the current turn from the Game instance.
+        current_turn = self.game.current_turn
+
+            
+        if self.game.current_turn == 0 or self.game.current_turn == 1:
+            wizard = 'sustainability'
+            self.player.choose_wizard(wizard)
+            return True
+        else:
+            x = self.player.wizard.tile.x
+            y = self.player.wizard.tile.y
+            tile = self.game.get_tile_at(int(x), int(y))
+
+            if current_turn % 2 != 0:
+                
+                # Move south until hitting a wall (checking if there is a valid tile south)
+                if self.player.wizard.tile.tile_south is not None:
+                    if(current_turn < 16):
+                        tile = self.player.wizard.tile.tile_south
+                        self.player.wizard.move(tile)
+                        print("Moved South")
+                    else:
+                        random_number = random.randint(1, 4)
+                        if random_number == 1:
+                            tile = self.player.wizard.tile.tile_south
+                            self.player.wizard.move(tile)
+                            print("Moved South")
+                            self.player.wizard.cast('Punch', self.player.wizard.tile.tile_south)
+                            print("Punch South")              
+
+                        elif random_number == 2:
+                            tile = self.player.wizard.tile.tile_north
+                            self.player.wizard.move(tile)
+                            print("Moved North")
+                            self.player.wizard.cast('Punch', self.player.wizard.tile.tile_north)
+                            print("Punch North")
+                        
+                        elif random_number == 3:
+                            tile = self.player.wizard.tile.tile_west
+                            self.player.wizard.move(tile)
+                            print("Moved West")                           
+                            self.player.wizard.cast('Punch', self.player.wizard.tile.tile_west)
+                            print("Punch West")                 
+                        
+                        elif random_number == 4:
+                            tile = self.player.wizard.tile.tile_east
+                            self.player.wizard.move(tile)
+                            print("Moved East")
+                            self.player.wizard.cast('Punch', self.player.wizard.tile.tile_east)
+                            print("Punch East")
+
+
+            # If the wizard is at (1, 8)
+            elif current_turn % 2 == 0:
+                # Move north until hitting a wall
+                if self.player.wizard.tile.tile_north is not None:
+                    if(current_turn <= 8):
+                        tile = self.player.wizard.tile.tile_north
+                        self.player.wizard.move(tile)
+                        print("Moved North")
+                    
+                    else:
+                        random_number = random.randint(1, 4)
+                        if random_number == 1:
+                            tile = self.player.wizard.tile.tile_south
+                            self.player.wizard.move(tile)
+                            print("Moved South")
+                            self.player.wizard.cast('Punch', self.player.wizard.tile.tile_south)
+                            print("Punch South")
+
+                        elif random_number == 2:
+                            tile = self.player.wizard.tile.tile_north
+                            self.player.wizard.move(tile)
+                            print("Moved North")
+                            self.player.wizard.cast('Punch', self.player.wizard.tile.tile_north)
+                            print("Punch North")
+                        
+                        elif random_number == 3:
+                            tile = self.player.wizard.tile.tile_west
+                            self.player.wizard.move(tile)
+                            print("Moved West")
+                            self.player.wizard.cast('Punch', self.player.wizard.tile.tile_west)
+                            print("Punch West")
+                        
+                        elif random_number == 4:
+                            tile = self.player.wizard.tile.tile_east
+                            self.player.wizard.move(tile)
+                            print("Moved East")
+                            self.player.wizard.cast('Punch', self.player.wizard.tile.tile_east)
+                            print("Punch East")
+
+
+                # If the wizard is at (8, 1)
+            if current_turn % 2 != 0:
+                
+                # Move south until hitting a wall (checking if there is a valid tile south)
+                if self.player.wizard.tile.tile_south is not None:
+                    if(current_turn < 16):
+                        tile = self.player.wizard.tile.tile_south
+                        self.player.wizard.move(tile)
+                        print("Moved South")
+
+                    else:
+                        random_number = random.randint(1, 4)
+                        if random_number == 1:
+                            tile = self.player.wizard.tile.tile_south
+                            self.player.wizard.move(tile)
+                            print("Moved South")
+                            self.player.wizard.cast('Punch', self.player.wizard.tile.tile_south)
+                            print("Punch South")
+                            
+
+                        elif random_number == 2:
+                            tile = self.player.wizard.tile.tile_north
+                            self.player.wizard.move(tile)
+                            print("Moved North")
+
+                            self.player.wizard.cast('Punch', self.player.wizard.tile.tile_north)
+                            print("Punch North")
+                            
+
+                        elif random_number == 3:
+                            tile = self.player.wizard.tile.tile_west
+                            self.player.wizard.move(tile)
+                            print("Moved West")
+                            
+                            self.player.wizard.cast('Punch', self.player.wizard.tile.tile_west)
+                            print("Punch West")
+                          
+                            
+                        
+                        elif random_number == 4:
+                            tile = self.player.wizard.tile.tile_east
+                            self.player.wizard.move(tile)
+                            print("Moved East")
+                            
+                            self.player.wizard.cast('Punch', self.player.wizard.tile.tile_east)
+                            print("Punch East")
+
+
+            # If the wizard is at (1, 8)
+            elif current_turn % 2 == 0:
+                # Move north until hitting a wall
+                if self.player.wizard.tile.tile_north is not None:
+                    if(current_turn <= 8):
+                        tile = self.player.wizard.tile.tile_north
+                        self.player.wizard.move(tile)
+                        print("Moved North")
+                    
+                    else:
+                        random_number = random.randint(1, 4)
+                        if random_number == 1:
+                            tile = self.player.wizard.tile.tile_south
+                            self.player.wizard.move(tile)
+                            print("Moved South")
+                            self.player.wizard.cast('Punch', self.player.wizard.tile.tile_south)
+                            print("Punch South")
+
+                        elif random_number == 2:
+                            tile = self.player.wizard.tile.tile_north
+                            self.player.wizard.move(tile)
+                            print("Moved North")
+                            self.player.wizard.cast('Punch', self.player.wizard.tile.tile_north)
+                            print("Punch North")
+                        
+                        elif random_number == 3:
+                            tile = self.player.wizard.tile.tile_west
+                            self.player.wizard.move(tile)
+                            print("Moved West")
+                            self.player.wizard.cast('Punch', self.player.wizard.tile.tile_west)
+                            print("Punch West")
+                        
+                        elif random_number == 4:
+                            tile = self.player.wizard.tile.tile_east
+                            self.player.wizard.move(tile)
+                            print("Moved East")
+                            self.player.wizard.cast('Punch', self.player.wizard.tile.tile_east)
+                            print("Punch East")
+    
+            return True
+
+        # If no other actions are possible, end the turn.
+            print("Ending turn...")
         # <<-- Creer-Merge: runTurn -->> - Code you add between this comment and the end comment will be preserved between Creer re-runs.
         # Put your game logic here for runTurn
         return True
         # <<-- /Creer-Merge: runTurn -->>
+
+
+
 
     def find_path(self, start: 'games.magomachy.tile.Tile', goal: 'games.magomachy.tile.Tile') -> List['games.magomachy.tile.Tile']:
         """A very basic path finding algorithm (Breadth First Search) that when given a starting Tile, will return a valid path to the goal Tile.
